@@ -1,0 +1,9 @@
+name: PrisonDrinks
+main: com.comze_instancelabs.prisondrinks.Main
+version: 1.0
+author: InstanceLabs
+softdepend: [Vault]
+commands:
+   drinks:
+      description: Main command
+      usage: /drinks [action]
