@@ -74,7 +74,7 @@ public class Main extends JavaPlugin implements Listener {
 	}
 
 	@EventHandler
-	public void onDrink(PlayerItemConsumeEvent event) {
+	public void onDrink(final PlayerItemConsumeEvent event) {
 		if (event.getItem().getType() != Material.POTION) {
 			return;
 		}
@@ -92,27 +92,30 @@ public class Main extends JavaPlugin implements Listener {
 			} else {
 				econ.withdrawPlayer(playername, 100000 * 1000000);
 				event.getPlayer().sendMessage(ChatColor.RED + "You lost.");
-				event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1));
-				event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1));
-				event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20, 1));
+				event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 7 * 20, 1));
+				event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 7 * 20, 1));
 			}
 			return;
 		}
 		if (r.nextInt(9) > 5) { // 6 7 8 9
 			// win
-			event.getPlayer().sendMessage(ChatColor.GREEN + "You won " + formatter.format(Long.toString(getPrice(name) * 2)) + "!");
+			event.getPlayer().sendMessage(ChatColor.GREEN + "You won " + formatter.format(getPrice(name) * 2) + "!");
 			econ.depositPlayer(playername, getPrice(name) * 2);
 		} else {
 			// lose
 			econ.withdrawPlayer(playername, getPrice(name));
 			event.getPlayer().sendMessage(ChatColor.RED + "You lost.");
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1));
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20, 1));
-			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20, 1));
+			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 7 * 20, 1));
+			event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 7 * 20, 1));
 		}
 
-		event.getPlayer().getInventory().remove(new ItemStack(Material.POTION, 1));
-		event.getPlayer().updateInventory();
+		Bukkit.getScheduler().runTaskLater(this, new Runnable(){
+			public void run(){
+				event.getPlayer().getInventory().remove(new ItemStack(Material.POTION, 1));
+				event.getPlayer().updateInventory();
+			}
+		}, 10L);
+		
 	}
 
 	public static String stripColorCodes(String str) {
